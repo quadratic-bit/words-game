@@ -2,23 +2,13 @@ use std::collections::{HashSet, VecDeque};
 use std::io::{self, BufRead, Write};
 use colored::Colorize;
 
+mod macros;
+
 macro_rules! next_word {
     () => {
         print!("> ");
         let _ = io::stdout().flush();
         continue;
-    };
-}
-
-macro_rules! info {
-    ($msg: expr) => {
-        println!("{} {}", "[i]".blue(), $msg.blue());
-    };
-}
-
-macro_rules! err {
-    ($msg: expr) => {
-        println!("{} {}", "[-]".red(), $msg.red());
     };
 }
 
@@ -47,7 +37,7 @@ fn main() {
             });
             results_filname = Some(filename);
         } else {
-            err!(format!("Неизвестный аргумент: {}", token));
+            err!("Неизвестный аргумент: {}", token);
             std::process::exit(1);
         }
     }
@@ -65,7 +55,7 @@ fn main() {
         if query == "!назад" {
             if let Some(last_word) = last_words_buffer.iter().last() {
                 words.remove(last_word);
-                info!(format!("Последнее слово \"{}\" отменено", &last_word));
+                info!("Последнее слово \"{}\" отменено", &last_word);
                 last_words_buffer.pop_back();
             } else {
                 err!("Дальше перемещаться назад нельзя");
@@ -75,7 +65,7 @@ fn main() {
 
         if query == "!выход" {
             info!("Завершаем игру");
-            info!(format!("Всего было сыграно слов: {}", words.len()));
+            info!("Всего было сыграно слов: {}", words.len());
             if let Some(filename) = results_filname {
                 let content = words
                     .iter()
@@ -83,7 +73,7 @@ fn main() {
                     .collect::<Vec<&str>>()
                     .join("\n");
                 std::fs::write(filename, content).unwrap_or_else(|e| {
-                    err!(format!("Не удалось записать результат в файл: {}", e));
+                    err!("Не удалось записать результат в файл: {}", e);
                     std::process::exit(0);
                 });
             } else {
@@ -112,7 +102,7 @@ fn main() {
         if let Some(last_word) = last_words_buffer.iter().last() {
             let target_char = last_word.chars().rev().find(|c| !CHAR_AVOID_LIST.contains(c)).unwrap();
             if query.chars().next().unwrap() != target_char {
-                err!(format!("Слово должно начинаться с буквы \"{}\"", target_char));
+                err!("Слово должно начинаться с буквы \"{}\"", target_char);
                 next_word!();
             }
         }
