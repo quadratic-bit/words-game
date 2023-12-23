@@ -1,6 +1,6 @@
+use colored::Colorize;
 use std::collections::{HashSet, VecDeque};
 use std::io::{self, BufRead, Write};
-use colored::Colorize;
 
 mod macros;
 
@@ -54,7 +54,7 @@ fn main() {
     for line in stdin.lock().lines() {
         let query = prepare_string(line.unwrap());
 
-        if query == "" {
+        if query.is_empty() {
             next_word!();
         }
 
@@ -73,11 +73,7 @@ fn main() {
             info!("Завершаем игру");
             info!("Всего было сыграно слов: {}", words.len());
             if let Some(filename) = results_filname {
-                let content = words
-                    .iter()
-                    .map(|w| &**w)
-                    .collect::<Vec<&str>>()
-                    .join("\n");
+                let content = words.iter().map(|w| &**w).collect::<Vec<&str>>().join("\n");
                 std::fs::write(filename, content).unwrap_or_else(|e| {
                     err!("Не удалось записать результат в файл: {}", e);
                     std::process::exit(0);
@@ -90,12 +86,12 @@ fn main() {
             std::process::exit(0);
         }
 
-        if query.starts_with("!") {
+        if query.starts_with('!') {
             err!("Такой команды не существует");
             next_word!();
         }
 
-        if query.starts_with("?") {
+        if query.starts_with('?') {
             println!("{}", HELP_STRING);
             next_word!();
         }
@@ -111,7 +107,11 @@ fn main() {
         }
 
         if let Some(last_word) = last_words_buffer.iter().last() {
-            let target_char = last_word.chars().rev().find(|c| !CHAR_AVOID_LIST.contains(c)).unwrap();
+            let target_char = last_word
+                .chars()
+                .rev()
+                .find(|c| !CHAR_AVOID_LIST.contains(c))
+                .unwrap();
             if query.chars().next().unwrap() != target_char {
                 err!("Слово должно начинаться с буквы \"{}\"", target_char);
                 next_word!();
