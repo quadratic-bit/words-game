@@ -35,6 +35,22 @@ fn main() {
 
     let mut words: HashSet<String> = HashSet::new();
     let mut last_words_buffer: VecDeque<String> = VecDeque::new();
+    let mut results_filname: Option<String> = None;
+
+    let mut args = std::env::args();
+
+    while let Some(token) = args.next() {
+        if token == "--save" {
+            let filename = args.next().unwrap_or_else(|| {
+                err!("Не указано имя файла после --save");
+                std::process::exit(1);
+            });
+            results_filname = Some(filename);
+        } else {
+            err!(format!("Неизвестный аргумент: {}", token));
+            std::process::exit(1);
+        }
+    }
 
     print!("> ");
     let _ = io::stdout().flush();
@@ -60,6 +76,21 @@ fn main() {
         if query == "!выход" {
             info!("Завершаем игру");
             info!(format!("Всего было сыграно слов: {}", words.len()));
+            if let Some(filename) = results_filname {
+                let content = words
+                    .iter()
+                    .map(|w| &**w)
+                    .collect::<Vec<&str>>()
+                    .join("\n");
+                std::fs::write(filename, content).unwrap_or_else(|e| {
+                    err!(format!("Не удалось записать результат в файл: {}", e));
+                    std::process::exit(0);
+                });
+            } else {
+                for item in words {
+                    println!("{}", item);
+                }
+            }
             std::process::exit(0);
         }
 
