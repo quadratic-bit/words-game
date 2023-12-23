@@ -27,7 +27,7 @@ fn main() {
     let mut last_words_buffer: VecDeque<String> = VecDeque::new();
     let mut results_filname: Option<String> = None;
 
-    let mut args = std::env::args();
+    let mut args = std::env::args().skip(1);
 
     while let Some(token) = args.next() {
         if token == "--save" {
