@@ -47,9 +47,9 @@ fn main() {
         }
 
         if query == "!назад" {
-            if let Some(word) = last_words_buffer.iter().last() {
-                words.remove(word);
-                info!(format!("Последнее слово \"{}\" отменено", &word));
+            if let Some(last_word) = last_words_buffer.iter().last() {
+                words.remove(last_word);
+                info!(format!("Последнее слово \"{}\" отменено", &last_word));
                 last_words_buffer.pop_back();
             } else {
                 err!("Дальше перемещаться назад нельзя");
@@ -78,8 +78,8 @@ fn main() {
             next_word!();
         }
 
-        if let Some(word) = last_words_buffer.iter().last() {
-            let target_char = word.chars().rev().find(|c| !CHAR_AVOID_LIST.contains(c)).unwrap();
+        if let Some(last_word) = last_words_buffer.iter().last() {
+            let target_char = last_word.chars().rev().find(|c| !CHAR_AVOID_LIST.contains(c)).unwrap();
             if query.chars().next().unwrap() != target_char {
                 err!(format!("Слово должно начинаться с буквы \"{}\"", target_char));
                 next_word!();
