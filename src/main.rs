@@ -18,9 +18,11 @@ fn prepare_string(token: String) -> String {
 
 const WORD_HISTORY_BUFFER_LENGTH: usize = 10;
 const CHAR_AVOID_LIST: [char; 4] = ['-', 'ы', 'ь', 'ъ'];
+const HELP_STRING: &str = "!назад - отменить последнее принятое слово\n\
+                           !выход - завершить игру\n\
+                           ?      - вывести это меню";
 
 fn main() {
-    info!("Стартуем");
     let stdin = io::stdin();
 
     let mut words: HashSet<String> = HashSet::new();
@@ -36,12 +38,16 @@ fn main() {
                 std::process::exit(1);
             });
             results_filname = Some(filename);
+        } else if token == "--help" {
+            println!("{}", HELP_STRING);
+            std::process::exit(0);
         } else {
             err!("Неизвестный аргумент: {}", token);
             std::process::exit(1);
         }
     }
 
+    info!("Введите ? чтобы узнать существующие команды");
     print!("> ");
     let _ = io::stdout().flush();
 
@@ -86,6 +92,11 @@ fn main() {
 
         if query.starts_with("!") {
             err!("Такой команды не существует");
+            next_word!();
+        }
+
+        if query.starts_with("?") {
+            println!("{}", HELP_STRING);
             next_word!();
         }
 
