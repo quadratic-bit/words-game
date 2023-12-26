@@ -1,6 +1,6 @@
 [package]
 name = "word-chain-game"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["April <fynjyxbrjd@gmail.com>"]
 edition = "2021"
 description = "A word chain game helper"
