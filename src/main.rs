@@ -2,11 +2,13 @@ use colored::Colorize;
 use std::collections::{HashSet, VecDeque};
 use std::io::{self, BufRead, Write};
 
+
 mod macros;
+mod locale;
 
 macro_rules! next_word {
     () => {
-        print!("> ");
+        print!("{}", locale::PROMPT);
         let _ = io::stdout().flush();
         continue;
     };
@@ -17,10 +19,6 @@ fn prepare_string(token: String) -> String {
 }
 
 const WORD_HISTORY_BUFFER_LENGTH: usize = 10;
-const CHAR_AVOID_LIST: [char; 4] = ['-', 'ы', 'ь', 'ъ'];
-const HELP_STRING: &str = "!назад - отменить последнее принятое слово\n\
-                           !выход - завершить игру\n\
-                           ?      - вывести это меню";
 
 fn main() {
     let stdin = io::stdin();
@@ -34,21 +32,21 @@ fn main() {
     while let Some(token) = args.next() {
         if token == "--save" {
             let filename = args.next().unwrap_or_else(|| {
-                err!("Не указано имя файла после --save");
+                err!(locale::ERR_MISSING_FILENAME);
                 std::process::exit(1);
             });
             results_filname = Some(filename);
         } else if token == "--help" {
-            println!("{}", HELP_STRING);
+            println!("{}", locale::HELP_STRING);
             std::process::exit(0);
         } else {
-            err!("Неизвестный аргумент: {}", token);
+            err!(locale::ERR_INVALID_CLI_ARGUMENT, token);
             std::process::exit(1);
         }
     }
 
-    info!("Введите ? чтобы узнать существующие команды");
-    print!("> ");
+    info!(locale::INF_WELCOME);
+    print!("{}", locale::PROMPT);
     let _ = io::stdout().flush();
 
     for line in stdin.lock().lines() {
@@ -58,24 +56,23 @@ fn main() {
             next_word!();
         }
 
-        if query == "!назад" {
+        if query == locale::CMD_UNDO {
             if let Some(last_word) = last_words_buffer.iter().last() {
                 words.remove(last_word);
-                info!("Последнее слово \"{}\" отменено", &last_word);
+                info!(locale::INF_UNDO_WORD, &last_word);
                 last_words_buffer.pop_back();
             } else {
-                err!("Дальше перемещаться назад нельзя");
+                err!(locale::ERR_END_OF_UNDO_BUFFER);
             }
             next_word!();
         }
 
-        if query == "!выход" {
-            info!("Завершаем игру");
-            info!("Всего было сыграно слов: {}", words.len());
+        if query == locale::CMD_EXIT {
+            info!(locale::INF_EXIT, words.len());
             if let Some(filename) = results_filname {
                 let content = words.iter().map(|w| &**w).collect::<Vec<&str>>().join("\n");
                 std::fs::write(filename, content).unwrap_or_else(|e| {
-                    err!("Не удалось записать результат в файл: {}", e);
+                    err!(locale::ERR_FAILED_WRITE, e);
                     std::process::exit(0);
                 });
             } else {
@@ -87,22 +84,22 @@ fn main() {
         }
 
         if query.starts_with('!') {
-            err!("Такой команды не существует");
+            err!(locale::ERR_INVALID_CMD);
             next_word!();
         }
 
         if query.starts_with('?') {
-            println!("{}", HELP_STRING);
+            println!("{}", locale::HELP_STRING);
             next_word!();
         }
 
         if !query.chars().all(|c| c.is_alphabetic() || c == '-') {
-            err!("Слово может содержать только буквы и дефис");
+            err!(locale::ERR_INVALID_CHR);
             next_word!();
         }
 
-        if !query.chars().any(|c| !CHAR_AVOID_LIST.contains(&c)) {
-            err!("Следующее слово невозомжно");
+        if !query.chars().any(|c| !locale::ILLEGAL_STARTING_CHRS.contains(&c)) {
+            err!(locale::ERR_INVALID_WORD);
             next_word!();
         }
 
@@ -110,16 +107,16 @@ fn main() {
             let target_char = last_word
                 .chars()
                 .rev()
-                .find(|c| !CHAR_AVOID_LIST.contains(c))
+                .find(|c| !locale::ILLEGAL_STARTING_CHRS.contains(c))
                 .unwrap();
             if query.chars().next().unwrap() != target_char {
-                err!("Слово должно начинаться с буквы \"{}\"", target_char);
+                err!(locale::ERR_ILLEGAL_FIRST_CHR, target_char);
                 next_word!();
             }
         }
 
         if !words.insert(query.clone()) {
-            err!("Это слово уже использовано");
+            err!(locale::ERR_WORD_REPEAT);
         } else {
             last_words_buffer.push_back(query);
             if last_words_buffer.len() > WORD_HISTORY_BUFFER_LENGTH {

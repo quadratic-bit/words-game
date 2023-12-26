@@ -1,21 +1,21 @@
 #[macro_export]
 macro_rules! info {
-    ( $msg: literal ) => {
+    ( $msg: path ) => {
         println!("{} {}", "[i]".blue(), $msg.blue());
     };
 
-    ( $msg: literal, $( $arg: expr ),* ) => {
-        println!("{} {}", "[i]".blue(), format!($msg, $( $arg ),*).blue());
+    ( $msg: path, $arg: expr ) => {
+        println!("{} {} {}", "[i]".blue(), $msg.blue(), $arg.to_string().blue());
     };
 }
 
 #[macro_export]
 macro_rules! err {
-    ( $msg: literal ) => {
+    ( $msg: path ) => {
         println!("{} {}", "[-]".red(), $msg.red());
     };
 
-    ( $msg: literal, $( $arg: expr ),* ) => {
-        println!("{} {}", "[-]".red(), format!($msg, $( $arg ),*).red());
+    ( $msg: path, $arg: expr ) => {
+        println!("{} {} {}", "[-]".red(), $msg.red(), $arg.to_string().red());
     };
 }
