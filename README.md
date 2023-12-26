@@ -45,6 +45,16 @@ You can also undo a couple of last words with `!!`, in case of typos:
 All available commands can be viewed by prompting `?`
 or by passing `--help` to the executable
 
+## Installation
+
+The binary name for Words game is `words`.
+
+To install the binary, run:
+
+```console
+$ cargo install word-chain-game
+```
+
 ## Building
 
 This game is written in Rust, so you'll need to compile via `cargo`:
