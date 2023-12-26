@@ -6,6 +6,12 @@ pub const ILLEGAL_STARTING_CHARACTERS: [char; 4] = ['-', 'ы', 'ь', 'ъ'];
 /// Sequence of prompting characters before every user input.
 pub const PROMPT: &str = "> ";
 
+/// Sequence of characters put before every error message.
+pub const PREFIX_ERR: &str = "[-] ";
+
+/// Sequence of characters put before every informational message.
+pub const PREFIX_INF: &str = "[i] ";
+
 pub const COMMAND_UNDO: &str = "!!";
 pub const COMMAND_EXIT: &str = "!#";
 
