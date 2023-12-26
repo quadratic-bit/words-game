@@ -2,21 +2,8 @@ use colored::Colorize;
 use std::collections::{HashSet, VecDeque};
 use std::io::{self, BufRead, Write};
 
-
-mod macros;
 mod locale;
-
-macro_rules! next_word {
-    () => {
-        print!("{}", locale::PROMPT);
-        let _ = io::stdout().flush();
-        continue;
-    };
-}
-
-fn prepare_string(token: String) -> String {
-    token.to_lowercase()
-}
+mod macros;
 
 const WORD_HISTORY_BUFFER_LENGTH: usize = 10;
 
@@ -38,7 +25,7 @@ fn main() {
             results_filname = Some(filename);
         } else if token == "--help" {
             println!("{}", locale::HELP_STRING);
-            std::process::exit(0);
+            return;
         } else {
             err!(locale::ERR_INVALID_CLI_ARGUMENT, token);
             std::process::exit(1);
@@ -46,14 +33,22 @@ fn main() {
     }
 
     info!(locale::INF_WELCOME);
-    print!("{}", locale::PROMPT);
-    let _ = io::stdout().flush();
+    let mut stdin = stdin.lock().lines();
 
-    for line in stdin.lock().lines() {
-        let query = prepare_string(line.unwrap());
+    loop {
+        print!("{}", locale::PROMPT);
+        let _ = io::stdout().flush();
+
+        let line = if let Some(res) = stdin.next() {
+            res
+        } else {
+            break;
+        };
+
+        let query = line.unwrap().to_lowercase();
 
         if query.is_empty() {
-            next_word!();
+            continue;
         }
 
         if query == locale::CMD_UNDO {
@@ -64,7 +59,7 @@ fn main() {
             } else {
                 err!(locale::ERR_END_OF_UNDO_BUFFER);
             }
-            next_word!();
+            continue;
         }
 
         if query == locale::CMD_EXIT {
@@ -85,22 +80,22 @@ fn main() {
 
         if query.starts_with('!') {
             err!(locale::ERR_INVALID_CMD);
-            next_word!();
+            continue;
         }
 
         if query.starts_with('?') {
             println!("{}", locale::HELP_STRING);
-            next_word!();
+            continue;
         }
 
         if !query.chars().all(|c| c.is_alphabetic() || c == '-') {
             err!(locale::ERR_INVALID_CHR);
-            next_word!();
+            continue;
         }
 
         if !query.chars().any(|c| !locale::ILLEGAL_STARTING_CHRS.contains(&c)) {
             err!(locale::ERR_INVALID_WORD);
-            next_word!();
+            continue;
         }
 
         if let Some(last_word) = last_words_buffer.iter().last() {
@@ -111,7 +106,7 @@ fn main() {
                 .unwrap();
             if query.chars().next().unwrap() != target_char {
                 err!(locale::ERR_ILLEGAL_FIRST_CHR, target_char);
-                next_word!();
+                continue;
             }
         }
 
@@ -123,6 +118,5 @@ fn main() {
                 last_words_buffer.pop_front();
             }
         }
-        next_word!();
     }
 }
