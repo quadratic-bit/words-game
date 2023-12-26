@@ -1,7 +1,19 @@
 [package]
-name = "words-game"
+name = "word-chain-game"
 version = "0.1.0"
+authors = ["April <fynjyxbrjd@gmail.com>"]
 edition = "2021"
+description = "A word chain game helper"
+readme = "README.md"
+homepage = "https://github.com/quadratic-bit/words-game"
+repository = "https://github.com/quadratic-bit/words-game"
+license = "Unlicense"
+keywords = ["game", "word-chain", "last-and-first", "words"]
+categories = ["command-line-utilities", "games"]
+
+[[bin]]
+path = "src/main.rs"
+name = "words"
 
 [dependencies]
 colored = "2.1.0"
