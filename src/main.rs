@@ -51,7 +51,7 @@ fn main() {
             continue;
         }
 
-        if query == locale::CMD_UNDO {
+        if query == locale::COMMAND_UNDO {
             if let Some(last_word) = last_words_buffer.iter().last() {
                 words.remove(last_word);
                 info!(locale::INF_UNDO_WORD, &last_word);
@@ -62,13 +62,17 @@ fn main() {
             continue;
         }
 
-        if query == locale::CMD_EXIT {
+        if query == locale::COMMAND_EXIT {
             info!(locale::INF_EXIT, words.len());
             if let Some(filename) = results_filname {
-                let content = words.iter().map(|w| &**w).collect::<Vec<&str>>().join("\n");
+                let content = words
+                    .iter()
+                    .map(|w| &**w)
+                    .collect::<Vec<&str>>()
+                    .join("\n");
                 std::fs::write(filename, content).unwrap_or_else(|e| {
                     err!(locale::ERR_FAILED_WRITE, e);
-                    std::process::exit(0);
+                    std::process::exit(1);
                 });
             } else {
                 for item in words {
@@ -79,7 +83,7 @@ fn main() {
         }
 
         if query.starts_with('!') {
-            err!(locale::ERR_INVALID_CMD);
+            err!(locale::ERR_INVALID_COMMAND);
             continue;
         }
 
@@ -89,11 +93,11 @@ fn main() {
         }
 
         if !query.chars().all(|c| c.is_alphabetic() || c == '-') {
-            err!(locale::ERR_INVALID_CHR);
+            err!(locale::ERR_INVALID_CHARACTER);
             continue;
         }
 
-        if !query.chars().any(|c| !locale::ILLEGAL_STARTING_CHRS.contains(&c)) {
+        if !query.chars().any(|c| !locale::ILLEGAL_STARTING_CHARACTERS.contains(&c)) {
             err!(locale::ERR_INVALID_WORD);
             continue;
         }
@@ -102,10 +106,10 @@ fn main() {
             let target_char = last_word
                 .chars()
                 .rev()
-                .find(|c| !locale::ILLEGAL_STARTING_CHRS.contains(c))
+                .find(|c| !locale::ILLEGAL_STARTING_CHARACTERS.contains(c))
                 .unwrap();
             if query.chars().next().unwrap() != target_char {
-                err!(locale::ERR_ILLEGAL_FIRST_CHR, target_char);
+                err!(locale::ERR_ILLEGAL_FIRST_CHARACTER, target_char);
                 continue;
             }
         }

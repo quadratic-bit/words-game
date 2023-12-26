@@ -5,7 +5,12 @@ macro_rules! info {
     };
 
     ( $msg: path, $arg: expr ) => {
-        println!("{} {} {}", "[i]".blue(), $msg.blue(), $arg.to_string().blue());
+        println!(
+            "{} {} {}",
+            "[i]".blue(),
+            $msg.blue(),
+            $arg.to_string().blue()
+        );
     };
 }
 
@@ -16,6 +21,11 @@ macro_rules! err {
     };
 
     ( $msg: path, $arg: expr ) => {
-        println!("{} {} {}", "[-]".red(), $msg.red(), $arg.to_string().red());
+        println!(
+            "{} {} {}",
+            "[-]".red(),
+            $msg.red(),
+            $arg.to_string().red()
+        );
     };
 }
