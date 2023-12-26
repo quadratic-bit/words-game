@@ -1,8 +1,8 @@
-mod locale;
+mod literals;
 mod macros;
 
 use colored::Colorize;
-use locale::*;
+use literals::*;
 use std::collections::{HashSet, VecDeque};
 use std::io::{self, BufRead, Write};
 use std::{process, fs, env};

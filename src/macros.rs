@@ -1,3 +1,5 @@
+//! Defines convenient macros for communicating with the player.
+
 #[macro_export]
 macro_rules! info {
     ( $msg: path ) => {
