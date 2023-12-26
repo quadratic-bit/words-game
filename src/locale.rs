@@ -1,12 +1,12 @@
 pub const ILLEGAL_STARTING_CHARACTERS: [char; 4] = ['-', 'ы', 'ь', 'ъ'];
 
 pub const PROMPT: &str = "> ";
-pub const COMMAND_UNDO: &str = "!назад";
-pub const COMMAND_EXIT: &str = "!выход";
+pub const COMMAND_UNDO: &str = "!!";
+pub const COMMAND_EXIT: &str = "!#";
 
-pub const HELP_STRING: &str = "!назад - отменить последнее принятое слово\n\
-                               !выход - завершить игру\n\
-                               ?      - вывести это меню";
+pub const HELP_STRING: &str = "!! - отменить последнее принятое слово\n\
+                               !# - завершить игру\n\
+                               ?  - вывести это меню";
 
 pub const ERR_MISSING_FILENAME: &str = "Не указано имя файла после --save";
 pub const ERR_END_OF_UNDO_BUFFER: &str = "Дальше перемещаться назад нельзя";
