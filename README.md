@@ -1,9 +1,12 @@
-# Words game
+Words game
+----------
 
 A game of [word chain](https://en.wikipedia.org/wiki/Word_chain) made by me
 in 30 spare minutes because of the flight delay.
 
-## Usage
+[![Crates.io](https://img.shields.io/crates/v/word-chain-game.svg)](https://crates.io/crates/word-chain-game)
+
+### Usage
 
 Upon executing the binary, you'll be prompted to enter a word. A "word" is a
 case-insensitive sequence of Unicode `Alphabetic` characters (or a hyphen `-`).
@@ -45,7 +48,7 @@ You can also undo a couple of last words with `!!`, in case of typos:
 All available commands can be viewed by prompting `?`
 or by passing `--help` to the executable
 
-## Installation
+### Installation
 
 The binary name for Words game is `words`.
 
@@ -55,7 +58,7 @@ To install the binary, run:
 $ cargo install word-chain-game
 ```
 
-## Building
+### Building
 
 This game is written in Rust, so you'll need to compile via `cargo`:
 
@@ -66,9 +69,9 @@ $ cargo build --release
 $ ./target/release/words --help
 ```
 
-## Modification
+### Modification
 
-### Locali(z|s)ation
+#### Locali(z|s)ation
 
 All string literals are stored in [`src/literals.rs`](src/literals.rs) with
 explanations, so changing UI language should be no problem.
@@ -83,7 +86,7 @@ which controls all characters that a word cannot start with
 a new word is constructed using only these characters, as no word can
 be a follow-up.
 
-### Undo buffer size
+#### Undo buffer size
 
 There are loads of words to come up with in such a game, so storing all of them
 in a vector is not reasonable. But it is reasonable to store the last `n` words
