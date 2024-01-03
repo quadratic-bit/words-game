@@ -36,11 +36,11 @@ If you try to enter a word that was already introduced, you'll get a warning:
 [-] This word has already been used
 ```
 
-You can also undo a couple of last words with `!!`, in case of typos:
+You can also undo a couple of last words with `!undo`, in case of typos:
 
 ```console
 > etherium
-> !!
+> !undo
 [i] Previous word was cancelled: etherium
 > ethereum
 ```
@@ -72,6 +72,9 @@ $ ./target/release/words --help
 ### Modification
 
 #### Locali(z|s)ation
+
+The default UI language is english, but branch `locale-ru`
+contains russian translation.
 
 All string literals are stored in [`src/literals.rs`](src/literals.rs) with
 explanations, so changing UI language should be no problem.
