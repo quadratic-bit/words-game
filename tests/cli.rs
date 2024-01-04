@@ -34,7 +34,9 @@ fn save_to_file() -> Result<(), Box<dyn std::error::Error>> {
     let file = NamedTempFile::new("result.txt")?;
     let mut cmd = Command::cargo_bin("words")?;
 
-    cmd.arg("--save").arg(file.path()).write_stdin("fine\n!exit");
+    cmd.arg("--save")
+        .arg(file.path())
+        .write_stdin(String::from("fine\n") + COMMAND_EXIT);
     cmd.assert()
         .success()
         .stdout(str_contains(INF_WELCOME).and(str_contains(INF_EXIT)));
