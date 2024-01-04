@@ -19,11 +19,11 @@ macro_rules! info {
 #[macro_export]
 macro_rules! err {
     ( $msg: path ) => {
-        println!("{}{}", PREFIX_ERR.red(), $msg.red());
+        eprintln!("{}{}", PREFIX_ERR.red(), $msg.red());
     };
 
     ( $msg: path, $arg: expr ) => {
-        println!(
+        eprintln!(
             "{}{} {}",
             PREFIX_ERR.red(),
             $msg.red(),
