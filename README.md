@@ -100,3 +100,11 @@ but it can be changed in [`src/main.rs`](src/main.rs):
 ```rust
 const WORD_HISTORY_BUFFER_LENGTH: usize = 10;
 ```
+
+### Testing
+
+You can add and run your tests from the `tests/` forlder via:
+
+```console
+$ cargo test
+```
